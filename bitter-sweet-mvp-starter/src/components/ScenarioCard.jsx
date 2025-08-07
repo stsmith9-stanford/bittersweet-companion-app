@@ -1,16 +1,32 @@
+const backgroundsByCharacter = {
+  Mila: {
+    webp: "/bittersweet-cards/card-yellow-orange-blue.webp",
+    png: "/bittersweet-cards/card-yellow-orange-blue.png",
+  },
+  Lucy: {
+    webp: "/bittersweet-cards/card-blue-yellow.webp",
+    png: "/bittersweet-cards/card-blue-yellow.png",
+  },
+  Canela: {
+    webp: "/bittersweet-cards/card-red-orange-purple.webp",
+    png: "/bittersweet-cards/card-red-orange-purple.png",
+  },
+};
+
 export default function ScenarioCard({ data, reveal, onReveal }) {
   if (!data) return null;
 
-  const { scenario, options } = data;
+  const { scenario, options, character } = { character: 'Mila', ...data };
+  const bg = backgroundsByCharacter[character] || backgroundsByCharacter.Mila;
 
   return (
-    <div 
-      className="max-w-md mx-auto p-6 rounded-xl shadow-lg mt-4 space-y-4 min-h-[400px] relative overflow-hidden"
+    <div
+      className="max-w-md mx-auto p-6 rounded-xl shadow-lg mt-4 space-y-4 min-h-[400px] relative overflow-hidden animate-fade-in"
       style={{
-        backgroundImage: `url('/bittersweet cards/card-blue-yellow.png')`,
+        backgroundImage: `image-set(url('${bg.webp}') type('image/webp'), url('${bg.png}') type('image/png'))`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
       }}
     >
       <div className="absolute inset-0 bg-black bg-opacity-20 rounded-xl"></div>
