@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ScenarioCard from './components/ScenarioCard';
 import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';
@@ -7,6 +7,7 @@ function App() {
   const [character, setCharacter] = useState('Mila');
   const [age, setAge] = useState(28);
   const [scenarioData, setScenarioData] = useState(null);
+  const [history, setHistory] = useState([]);
   const [reveal, setReveal] = useState(false);
 
   const generateMutation = useMutation({
@@ -18,6 +19,11 @@ function App() {
     },
     onSuccess: (data) => {
       setScenarioData(data);
+      setHistory((prev) => {
+        const next = [data, ...prev].slice(0, 5);
+        localStorage.setItem('bs_history', JSON.stringify(next));
+        return next;
+      });
     },
   });
 
@@ -25,6 +31,13 @@ function App() {
     setReveal(false);
     generateMutation.mutate({ character, age });
   };
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('bs_history');
+      if (raw) setHistory(JSON.parse(raw));
+    } catch {}
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -60,6 +73,17 @@ function App() {
         <div className="mt-4 text-center text-gray-600">Generating card…</div>
       )}
       <ScenarioCard data={scenarioData} reveal={reveal} onReveal={() => setReveal(true)} />
+
+      {history.length > 0 && (
+        <div className="max-w-md mx-auto mt-6">
+          <h2 className="text-sm font-semibold text-gray-600 mb-2">Recent cards</h2>
+          <ul className="space-y-2">
+            {history.map((h, idx) => (
+              <li key={idx} className="text-sm text-gray-700 line-clamp-2">{h.scenario}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
