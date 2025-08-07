@@ -72,7 +72,12 @@ function App() {
       {generateMutation.isPending && (
         <div className="mt-4 text-center text-gray-600">Generating card…</div>
       )}
-      <ScenarioCard data={scenarioData} reveal={reveal} onReveal={() => setReveal(true)} />
+      <ScenarioCard
+        data={scenarioData}
+        persona={character}
+        reveal={reveal}
+        onReveal={() => setReveal(true)}
+      />
 
       {history.length > 0 && (
         <div className="max-w-md mx-auto mt-6">
